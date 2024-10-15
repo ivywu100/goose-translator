@@ -49,6 +49,10 @@ export default function Index() {
         // Load and play the audio
         const { sound } = await Audio.Sound.createAsync(soundFile);
 
+
+        const playbackRate = 1.0;
+        await sound.setRateAsync(playbackRate, true);
+
         // Play the sound
         await sound.playAsync();
 

@@ -14,10 +14,17 @@ export default function Index() {
   const [inputText, setInputText] = React.useState('Insert Text Here');
   const [inputtedText, setInputtedText] = useState('');
   const [translationText, setTranslationText] = useState('');
+  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null); // Add state to keep track of the current sound
 
   // Load the audio file
   async function playAudio() {
     if (inputtedText.length === 0) return;
+
+    // Stop the currently playing sound if it exists
+    if (currentSound) {
+      await currentSound.stopAsync();
+      await currentSound.unloadAsync();
+    }
 
     const words = inputtedText.trim().split(/\s+/);
 
@@ -48,7 +55,7 @@ export default function Index() {
 
         // Load and play the audio
         const { sound } = await Audio.Sound.createAsync(soundFile);
-
+        setCurrentSound(sound); // Set the current sound
 
         const playbackRate = 1.0;
         await sound.setRateAsync(playbackRate, true);

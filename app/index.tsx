@@ -1,11 +1,10 @@
 import { View, StyleSheet, TextInput, Text, Dimensions, Platform } from 'react-native';
-import ImageViewer from '@/components/ImageViewer';
 import Button from '@/components/Button';
+import IconButton from '@/components/IconButton';
 import React, { useState } from 'react';
 import { Audio } from 'expo-av';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-const PlaceholderImage = require('@/assets/images/background-image.png');
 
 const { height } = Dimensions.get('window');
 const boxHeight = height * 0.2;
@@ -35,7 +34,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <ImageViewer imgSource={PlaceholderImage}/>
+        <IconButton/>
       </View>
       <TextInput
         style={[styles.input, styles.textInputContainer, { width: '80%', height: boxHeight, verticalAlign: 'top' }]}
@@ -66,6 +65,7 @@ export default function Index() {
           style={{
             paddingVertical: 25, // Increase vertical padding
             paddingHorizontal: 50, // Increase horizontal padding
+            backgroundColor: "#ffffff",
           }} 
           labelStyle={{ fontSize: 18 }} // Increase font size for the label
         />

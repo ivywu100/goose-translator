@@ -29,9 +29,9 @@ export default function Button({
       <Pressable
         style={[
           buttonStyle,
-          {
-            backgroundColor: '#fff',
-          },
+          // {
+          //   backgroundColor: '#fff',
+          // },
         ]}
         onPress={onClickHandler}
       >

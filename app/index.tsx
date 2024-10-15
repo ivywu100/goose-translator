@@ -121,6 +121,7 @@ export default function Index() {
           style={{
             paddingVertical: 25,
             paddingHorizontal: 50,
+            backgroundColor: "#ffffff",
           }} 
           labelStyle={{ fontSize: 18 }}
         />

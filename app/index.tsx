@@ -11,24 +11,80 @@ const boxHeight = height * 0.2;
 
 export default function Index() {
   const [inputText, setInputText] = React.useState('Insert Text Here');
+  const [inputtedText, setInputtedText] = useState('');
   const [translationText, setTranslationText] = useState('');
+  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null); // Add state to keep track of the current sound
 
   // Load the audio file
   async function playAudio() {
-    // Load and play the audio
-    const { sound } = await Audio.Sound.createAsync(
-      require('@/assets/audio/honk-sound.mp3') 
-    );
-    await sound.playAsync(); // Play the sound
+    if (inputtedText.length === 0) return;
+
+    // Stop the currently playing sound if it exists
+    if (currentSound) {
+      await currentSound.stopAsync();
+      await currentSound.unloadAsync();
+    }
+
+    const words = inputtedText.trim().split(/\s+/);
+
+    // Array of sound files
+    const soundFiles = [
+        require('@/assets/audio/honk-0.mp3'),
+        require('@/assets/audio/honk-1.mp3'),
+        require('@/assets/audio/honk-2.mp3'),
+        require('@/assets/audio/honk-3.mp3'),
+        require('@/assets/audio/honk-4.mp3'),
+        require('@/assets/audio/honk-5.mp3'),
+    ];
+
+    // Simple hash function to generate a seed from the word
+    const hash = (word: string) => {
+        let hashValue = 0;
+        for (let i = 0; i < word.length; i++) {
+            hashValue += word.charCodeAt(i);
+        }
+        return hashValue;
+    };
+
+    // Play the sound for each word
+    for (const word of words) {
+        // Generate a random index based on the hash of the word
+        const randomIndex = hash(word) % soundFiles.length; // Ensure the index is within bounds
+        const soundFile = soundFiles[randomIndex]; // Select the sound file using the random index
+
+        // Load and play the audio
+        const { sound } = await Audio.Sound.createAsync(soundFile);
+        setCurrentSound(sound); // Set the current sound
+
+        const playbackRate = 1.0;
+        await sound.setRateAsync(playbackRate, true);
+
+        // Play the sound
+        await sound.playAsync();
+
+        // Wait for the sound to finish before playing the next one
+        await new Promise<void>((resolve) => {
+            sound.setOnPlaybackStatusUpdate((status) => {
+                if (status.isLoaded && status.didJustFinish) {
+                    resolve(); // Resolve the promise when the sound finishes playing
+                }
+            });
+        });
+
+        // Unload the sound to free up resources
+        await sound.unloadAsync();
+    }
   };
 
   function translateText() {
     const textArray = inputText.trim().split(/\s+/);
     const honkArray = textArray.map((elem, index) => {
+      if (elem.length === 0) return "";
       if (elem.length <= 4) return "honk";
-      return "h" + "o".repeat(Math.floor((elem.length - 3)/3) * 2) + "o".repeat(elem.length % 3) + "n".repeat(Math.floor((elem.length - 3)/3)) + "k"; // Updated to reflect the new logic
+      return "h" + "o".repeat(Math.floor((elem.length - 3)/3) * 2) + "o".repeat(elem.length % 3) + "n".repeat(Math.floor((elem.length - 3)/3)) + "k";
     })
     setTranslationText(honkArray.join(" "));
+    setInputtedText(inputText);
   }
 
   return (
@@ -53,8 +109,8 @@ export default function Index() {
             position: 'absolute',
             bottom: 10,
             right: 10,
-            borderWidth: 2, // Set border width for this button
-            borderRadius: 10, // Set border radius for rounded corners
+            borderWidth: 2,
+            borderRadius: 10,
           }} 
         /> 
       </View>   
@@ -63,11 +119,10 @@ export default function Index() {
           label="Translate" 
           onClickHandler={translateText} 
           style={{
-            paddingVertical: 25, // Increase vertical padding
-            paddingHorizontal: 50, // Increase horizontal padding
-            backgroundColor: "#ffffff",
+            paddingVertical: 25,
+            paddingHorizontal: 50,
           }} 
-          labelStyle={{ fontSize: 18 }} // Increase font size for the label
+          labelStyle={{ fontSize: 18 }}
         />
       </View>
     </View>
@@ -103,6 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   footerContainer: {
+    marginTop: 10,
     alignItems: 'center',
   },
 });

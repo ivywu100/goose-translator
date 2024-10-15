@@ -1,20 +1,18 @@
 import { StyleSheet, View, Pressable, Text, ViewStyle, TextStyle } from 'react-native';
 
-type Props = {
-  label?: string;
-  onClickHandler: () => void;
-  style?: ViewStyle;
-  labelStyle?: TextStyle;
-  icon?: React.ReactNode;
-};
-
 export default function Button({
   label,
   onClickHandler,
   style,
   labelStyle,
   icon,
-}: Props) {
+}: {
+  label?: string;
+  onClickHandler: () => void;
+  style?: ViewStyle;
+  labelStyle?: TextStyle;
+  icon?: React.ReactNode;
+}) {
   const buttonContent = icon ? (
     icon
   ) : (

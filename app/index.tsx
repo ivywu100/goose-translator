@@ -1,7 +1,7 @@
-import { View, StyleSheet, TextInput, Text, Dimensions, Platform } from 'react-native';
+import { View, StyleSheet, TextInput, Text, Dimensions, Platform, ImageSourcePropType } from 'react-native';
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Audio } from 'expo-av';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -10,10 +10,12 @@ const { height } = Dimensions.get('window');
 const boxHeight = height * 0.2;
 
 export default function Index() {
-  const [inputText, setInputText] = React.useState('Insert Text Here');
+  const [inputText, setInputText] = React.useState('');
   const [inputtedText, setInputtedText] = useState('');
-  const [translationText, setTranslationText] = useState('');
-  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null); // Add state to keep track of the current sound
+  const [translationText, setTranslationText] = useState('Translation');
+  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
+  const [gooseName, setGooseName] = useState<string>('Fred');
+  const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/background-image.png'));
 
   // Load the audio file
   async function playAudio() {
@@ -23,6 +25,7 @@ export default function Index() {
     if (currentSound) {
       await currentSound.stopAsync();
       await currentSound.unloadAsync();
+      setCurrentSound(null); // Reset currentSound to null
     }
 
     const words = inputtedText.trim().split(/\s+/);
@@ -48,40 +51,68 @@ export default function Index() {
 
     // Play the sound for each word
     for (const word of words) {
-        // Generate a random index based on the hash of the word
-        const randomIndex = hash(word) % soundFiles.length; // Ensure the index is within bounds
-        const soundFile = soundFiles[randomIndex]; // Select the sound file using the random index
+      const randomIndex = hash(word) % soundFiles.length;
+      const soundFile = soundFiles[randomIndex];
 
-        // Load and play the audio
-        const { sound } = await Audio.Sound.createAsync(soundFile);
-        setCurrentSound(sound); // Set the current sound
+      // Load and play the audio
+      const { sound } = await Audio.Sound.createAsync(soundFile);
+      setCurrentSound(sound); // Set the current sound
 
-        const playbackRate = 1.0;
-        await sound.setRateAsync(playbackRate, true);
+      let gooseVoiceModifier = 0;
+      switch (gooseName) {
+        case 'Fred':
+          gooseVoiceModifier = 0;
+          break;
+        case 'Steve':
+          gooseVoiceModifier = -0.15;
+          break;
+        case 'Dave':
+          gooseVoiceModifier = 0.15;
+          break;
+        default:
+          gooseVoiceModifier = 0;
+          break;
+      }
+      const playbackRate = 1.0 + gooseVoiceModifier;
+      await sound.setRateAsync(playbackRate, true);
 
-        // Play the sound
-        await sound.playAsync();
+      // Play the sound
+      await sound.playAsync();
 
-        // Wait for the sound to finish before playing the next one
-        await new Promise<void>((resolve) => {
-            sound.setOnPlaybackStatusUpdate((status) => {
-                if (status.isLoaded && status.didJustFinish) {
-                    resolve(); // Resolve the promise when the sound finishes playing
-                }
-            });
+      // Wait for sound to finish playing
+      await new Promise<void>((resolve) => {
+        let timer: NodeJS.Timeout;
+
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && !status.isPlaying && status.didJustFinish) {
+            clearTimeout(timer); // Clear the timer if sound finishes
+            resolve(); // Resolve the promise when the sound finishes playing
+          }
         });
 
-        // Unload the sound to free up resources
-        await sound.unloadAsync();
+        // Set a timer to resolve after 250 ms
+        timer = setTimeout(() => {
+          resolve(); // Resolve the promise after 400 ms
+        }, 300 / playbackRate);
+      });
+
+      // Optionally unload the sound after playing
+      await sound.unloadAsync();
+      setCurrentSound(null);
     }
   };
 
   function translateText() {
     const textArray = inputText.trim().split(/\s+/);
+    if (textArray.length === 0 || (textArray.length === 1 && textArray[0] === '')) {
+      setTranslationText("Translation");
+      setInputtedText("");
+      return;
+    }
     const honkArray = textArray.map((elem, index) => {
       if (elem.length === 0) return "";
-      if (elem.length <= 4) return "honk";
-      return "h" + "o".repeat(Math.floor((elem.length - 3)/3) * 2) + "o".repeat(elem.length % 3) + "n".repeat(Math.floor((elem.length - 3)/3)) + "k";
+      if (elem.length <= 4) return (elem.charAt(0) == elem.charAt(0).toLowerCase() ? "h" : "H") + "onk";
+      return (elem.charAt(0) == elem.charAt(0).toLowerCase() ? "h" : "H") + "o".repeat(Math.floor((elem.length - 2)/3) * 2) + "o".repeat((elem.length - 2) % 3) + "n".repeat(Math.floor((elem.length - 2)/3)) + "k";
     })
     setTranslationText(honkArray.join(" "));
     setInputtedText(inputText);
@@ -90,17 +121,19 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <IconButton/>
+        <IconButton imgSource={imgSource} setImgSource={setImgSource} setGooseName={setGooseName}/>
+        <Text style={styles.gooseName}>{gooseName}</Text>
       </View>
       <TextInput
-        style={[styles.input, styles.textInputContainer, { width: '80%', height: boxHeight, verticalAlign: 'top' }]}
+        style={[styles.input, styles.textInputContainer, ]}
         onChangeText={setInputText}
         value={inputText}
         multiline
         scrollEnabled
+        placeholder={inputText.length === 0 ? "Insert Text Here" : ""}
       />
       
-      <View style={{ width: '80%', height: boxHeight, overflow: 'hidden', position: 'relative' }}>
+      <View style={styles.textInputContainer}>
         <Text style={[styles.translationText]}>{translationText}</Text>
         <Button 
           onClickHandler={playAudio} 
@@ -122,6 +155,7 @@ export default function Index() {
             paddingVertical: 25,
             paddingHorizontal: 50,
             backgroundColor: "#ffffff",
+            borderWidth: 1,
           }} 
           labelStyle={{ fontSize: 18 }}
         />
@@ -139,19 +173,40 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
-     alignItems: 'center',
+    backgroundColor: '#aaaaaa',
+    alignItems: 'center',
+    paddingTop: 40,
+  },
+  gooseName: {
+    fontSize: 20, // Increased font size
+    fontWeight: 'bold', // Bold text
+    textAlign: 'center', // Centered text
+    marginTop: 10, // Space above the text
   },
   imageContainer: {
+    
   },
   textInputContainer: {
     backgroundColor: "#ffffff",
+    marginVertical: 10,
+    borderRadius: 20,
+    width: '80%',
+    height: boxHeight, 
+    verticalAlign: 'top'
+  },
+  translationTextContainer: {
+    borderRadius: 20,
+    width: '80%',
+    height: boxHeight,
+    overflow: 'hidden', 
+    position: 'relative'
   },
   translationText: {
     height: '100%',
     borderWidth: 1,
     padding: 10,
     backgroundColor: "#ffffff",
+    borderRadius: 20,
   },
    image: {
     width: 320,
@@ -159,7 +214,10 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   footerContainer: {
-    marginTop: 10,
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginTop: 30,
+    marginBottom: 30,
     alignItems: 'center',
   },
 });

@@ -1,25 +1,24 @@
-import { StyleSheet, View, Pressable,Text, ImageSourcePropType } from 'react-native';
+import { StyleSheet, View, Pressable, ImageSourcePropType, Dimensions, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Image } from "expo-image";
-import {Overlay } from 'react-native-elements';
 import Button from './Button';
-
-type Props = {
-  isVisible: boolean;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  onBackdropPress: () => void;
-  iconImage: ImageSourcePropType;
-  setImgSource: React.Dispatch<React.SetStateAction<ImageSourcePropType>>;
-}
-
+import { Overlay } from './Overlay';
 
 export default function IconOverlaySelection({
   isVisible,
   setVisible,
   onBackdropPress,
-  iconImage,
-  setImgSource
-}: Props) {
+  imgSource,
+  setImgSource,
+  setGooseName
+}: {
+  isVisible: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  onBackdropPress: () => void;
+  imgSource: ImageSourcePropType;
+  setImgSource: React.Dispatch<React.SetStateAction<ImageSourcePropType>>;
+  setGooseName: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const [images, setImages] = useState<ImageSourcePropType[]>([]);
 
   useEffect(() => {
@@ -28,19 +27,106 @@ export default function IconOverlaySelection({
     const gooseChoice2 = require('@/assets/images/gooseSelectionImages/placeholder-2.jpg');
   
     setImages([gooseChoice, gooseChoice1, gooseChoice2]);
-  }, [])
+  }, [])  
   
-  
-  const [mainImgSource, setMainImgSource] = useState<ImageSourcePropType>(iconImage);
+  const [mainImgSource, setMainImgSource] = useState<ImageSourcePropType>(imgSource);
 
   const saveImage = (imgSource: ImageSourcePropType) => {
     setImgSource(imgSource);
     setVisible(!isVisible);
+    if (imgSource === images[0]) {
+      setGooseName('Fred')
+    } else if (imgSource === images[1]) {
+      setGooseName('Steve')
+    } else {
+      setGooseName('Dave')
+    }
   };
 
   const saveMainImage = (imgSource: ImageSourcePropType) => {
     setMainImgSource(imgSource);
   };
+
+  const getGooseName = () => {
+    if (mainImgSource === images[0]) {
+      return 'Fred'
+    } else if (mainImgSource === images[1]) {
+      return 'Steve'
+    } else {
+      return 'Dave'
+    }
+  }
+
+  const { width } = Dimensions.get('window');
+  const isMobile = width < 630;
+
+  const styles = StyleSheet.create({
+    overlay: {
+    },
+    mainImage:{
+      width: 300,
+      height: 300,
+      borderRadius: 150,
+      borderWidth: 3,
+      overflow: "hidden",
+      borderColor: "red",
+    },
+    gooseName: {
+      fontSize: 20, // Increased font size
+      fontWeight: 'bold', // Bold text
+      textAlign: 'center', // Centered text
+      marginTop: 10, // Space above the text
+    },
+    image: {
+      width: isMobile ? 100 : 200,
+      height: isMobile ? 100 : 200,
+      borderRadius: isMobile ? 50 : 100,
+      borderWidth: 3,
+      overflow: "hidden",
+      marginHorizontal: isMobile ? 5 : 10,
+    },
+    imageSelectionContainer: {
+      flexDirection: 'row',
+      padding: 20,
+    },
+    imagesContainer: {
+      justifyContent: 'center',
+      alignItems: 'center', 
+    },
+    buttonContainer: {
+      marginHorizontal: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 3,
+      backgroundColor:"orange",
+      borderRadius: 10, 
+      fontSize: 16,
+    },
+    modalBackdrop: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0)', // Semi-transparent background
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000,
+    },
+    modalContainer: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 20,
+      width: '80%', // Adjust width as needed
+      height: '60%',
+      elevation: 5, // For Android shadow
+      shadowColor: '#000', // For iOS shadow
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      zIndex: 1001,
+    },
+  });
 
   const imageElements = images.map((img, index) => {
     return  <Pressable key={index} onPress={() => saveMainImage(img)}>
@@ -50,59 +136,18 @@ export default function IconOverlaySelection({
 
   return (
     <View>
-      <Overlay isVisible={isVisible} onBackdropPress={onBackdropPress} overlayStyle={styles.overlay}>
-        <View style={styles.imagesContainer}> {/* Centering container */}
+      <Overlay visible={isVisible} setVisible={setVisible}>
+        <View style={styles.imagesContainer}>
           <Image source={mainImgSource} style={styles.mainImage} />
+          <Text style={styles.gooseName}>{getGooseName()}</Text>
         </View>
         <View style={styles.imageSelectionContainer}>
           {imageElements}
         </View>
-
-        <View >
-          <Button label={`Submit`} onClickHandler={() => saveImage(mainImgSource)} style={styles.buttonContainer}></Button>
+        <View>
+          <Button label={`Select`} onClickHandler={() => saveImage(mainImgSource)} style={styles.buttonContainer}></Button>
         </View>
       </Overlay>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  overlay: {
-  },
-  mainImage:{
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    borderWidth: 3,
-    overflow: "hidden",
-    borderColor: "red",
-  },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    borderWidth: 3,
-    overflow: "hidden",
-    marginHorizontal: 10,
-  },
-  imageSelectionContainer: {
-    flexDirection: 'row',
-    padding: 20,
-    
-  },
-  imagesContainer: {
-    justifyContent: 'center',
-    alignItems: 'center', 
-  },
-  buttonContainer: {
-    marginHorizontal: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 3,
-    backgroundColor:"orange",
-    borderRadius: 10, 
-    fontSize: 16,
-  },
-});
-
-

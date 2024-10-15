@@ -3,12 +3,9 @@ import { Image } from "expo-image";
 import React, { useState } from 'react';
 import IconOverlaySelection from './IconOverlaySelection';
 
-export default function IconButton() {
-
-  const PlaceholderImage = require('@/assets/images/gooseSelectionImages/background-image.png');
+export default function IconButton({imgSource, setImgSource,setGooseName}: {imgSource: ImageSourcePropType, setImgSource: React.Dispatch<React.SetStateAction<ImageSourcePropType>>, setGooseName: React.Dispatch<React.SetStateAction<string>>}) {
 
   const [visible, setVisible] = useState(false);
-  const [imgSource, setImgSource] = useState<ImageSourcePropType>(PlaceholderImage);
 
   const openIconWindow = () => {
     setVisible(!visible);
@@ -25,7 +22,7 @@ export default function IconButton() {
       >
       {buttonContent}
       </Pressable>
-        <IconOverlaySelection isVisible={visible} setVisible= {setVisible} onBackdropPress={openIconWindow} iconImage={imgSource} setImgSource = {setImgSource}/>
+        <IconOverlaySelection isVisible={visible} setVisible= {setVisible} onBackdropPress={openIconWindow} imgSource={imgSource} setImgSource = {setImgSource} setGooseName={setGooseName}/>
     </View>
   );
 }

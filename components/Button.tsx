@@ -1,34 +1,41 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { StyleSheet, View, Pressable, Text, ViewStyle, TextStyle } from 'react-native';
 
 type Props = {
-  label: string;
+  label?: string;
   onClickHandler: () => void;
-  theme?: 'primary';
+  style?: ViewStyle;
+  labelStyle?: TextStyle;
+  icon?: React.ReactNode;
 };
 
-export default function Button({ label, theme, onClickHandler }: Props) {
-  if (theme === 'primary') {
-    return (
-      <View
-        style={[
-          styles.buttonContainer,
-          { borderWidth: 4, borderColor: '#ffd33d', borderRadius: 18 },
-        ]}>
-        <Pressable
-          style={[styles.button, { backgroundColor: '#fff' }]}
-          onPress={onClickHandler}>
-          <FontAwesome name="bullhorn" size={18} color="#25292e" style={styles.buttonIcon} />
-          <Text style={[styles.buttonLabel, { color: '#25292e' }]}>{label}</Text>
-        </Pressable>
-      </View>
-    );
-  }
+export default function Button({
+  label,
+  onClickHandler,
+  style,
+  labelStyle,
+  icon,
+}: Props) {
+  const buttonContent = icon ? (
+    icon
+  ) : (
+    <Text style={[styles.buttonLabel, labelStyle]}>{label}</Text>
+  );
+
+  // Flatten the styles to check for padding
+  const buttonStyle = StyleSheet.flatten([styles.button, style]);
 
   return (
-    <View style={styles.buttonContainer}>
-      <Pressable style={[styles.button, { backgroundColor: '#fff' }]} onPress={onClickHandler}>
-          <Text style={[styles.buttonLabel, { color: '#25292e' }]}>{label}</Text>
+    <View style={[styles.buttonContainer]}>
+      <Pressable
+        style={[
+          buttonStyle,
+          {
+            backgroundColor: '#fff',
+          },
+        ]}
+        onPress={onClickHandler}
+      >
+        {buttonContent}
       </Pressable>
     </View>
   );
@@ -36,26 +43,24 @@ export default function Button({ label, theme, onClickHandler }: Props) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 320,
-    height: 68,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
   },
   button: {
-    borderRadius: 10,
-    width: '100%',
-    height: '100%',
+    borderRadius: 10, 
+    paddingVertical: 10, 
+    paddingHorizontal: 10, 
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
   },
   buttonIcon: {
-    paddingRight: 8,
+    paddingRight: 0, // No padding needed for icon-only button
   },
   buttonLabel: {
-    color: '#fff',
+    color: '#25292e',
     fontSize: 16,
   },
 });

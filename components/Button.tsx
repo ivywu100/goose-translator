@@ -25,7 +25,6 @@ export default function Button({
   const buttonStyle = StyleSheet.flatten([styles.button, style]);
 
   return (
-    <View style={[styles.buttonContainer]}>
       <Pressable
         style={[
           buttonStyle,
@@ -37,17 +36,10 @@ export default function Button({
       >
         {buttonContent}
       </Pressable>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    marginHorizontal: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 3,
-  },
   button: {
     borderRadius: 10, 
     paddingVertical: 10, 
@@ -57,7 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonIcon: {
-    paddingRight: 0, // No padding needed for icon-only button
+    paddingRight: 0, 
   },
   buttonLabel: {
     color: '#25292e',

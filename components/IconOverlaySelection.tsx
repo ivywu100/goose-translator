@@ -22,7 +22,7 @@ export default function IconOverlaySelection({
   const [images, setImages] = useState<ImageSourcePropType[]>([]);
 
   useEffect(() => {
-    const gooseChoice = require('@/assets/images/gooseSelectionImages/background-image.png');
+    const gooseChoice = require('@/assets/images/gooseSelectionImages/background-image.jpg');
     const gooseChoice1 = require('@/assets/images/gooseSelectionImages/placeholder-1.jpg');
     const gooseChoice2 = require('@/assets/images/gooseSelectionImages/placeholder-2.jpg');
   

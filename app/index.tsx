@@ -15,7 +15,7 @@ export default function Index() {
   const [translationText, setTranslationText] = useState('Translation');
   const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
   const [gooseName, setGooseName] = useState<string>('Fred');
-  const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/background-image.png'));
+  const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/background-image.jpg'));
 
   // Load the audio file
   async function playAudio() {

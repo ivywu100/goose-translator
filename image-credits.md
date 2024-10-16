@@ -2,8 +2,8 @@
 
 ## Goose 1 (Fred)
 ![Goose 1](assets/images/gooseSelectionImages/goose-1.jpg)
-*Photographer: Pixabay*  
-*Source: [https://www.pexels.com/photo/white-goose-on-snow-covered-ground-at-daytime-57406/](https://www.pexels.com/photo/white-goose-on-snow-covered-ground-at-daytime-57406/)*
+*Photographer: Unknown (Pixabay)*  
+*Source: [https://pixabay.com/photos/greater-snow-goose-goose-snow-goose-284211/](https://pixabay.com/photos/greater-snow-goose-goose-snow-goose-284211/)*
 
 ## Goose 2 (Steve)
 ![Goose 2](assets/images/gooseSelectionImages/goose-2.jpg)
@@ -12,8 +12,8 @@
 
 ## Goose 3 (Dave)
 ![Goose 3](assets/images/gooseSelectionImages/goose-3.jpg)
-*Photographer: Pixabay*  
-*Source: [https://www.pexels.com/photo/brown-and-white-goose-66863/](https://www.pexels.com/photo/brown-and-white-goose-66863/)*
+*Photographer: music4life*  
+*Source: [https://pixabay.com/photos/goose-water-bird-nature-bird-flow-178143/](https://pixabay.com/photos/goose-water-bird-nature-bird-flow-178143/)*
 
 ---
 

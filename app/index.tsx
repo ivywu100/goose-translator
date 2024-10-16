@@ -5,6 +5,7 @@ import { Audio } from 'expo-av';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import IconButton from './IconButton';
 import About from './About';
+import AudioPlayerButton from './AudioPlayerButton';
 
 
 const { height } = Dimensions.get('window');
@@ -14,94 +15,9 @@ export default function Index() {
   const [inputText, setInputText] = React.useState('');
   const [inputtedText, setInputtedText] = useState('');
   const [translationText, setTranslationText] = useState('Translation');
-  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
   const [gooseName, setGooseName] = useState<string>('Fred');
   const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/goose-1.jpg'));
-
-  // Load the audio file
-  async function playAudio() {
-    if (inputtedText.length === 0) return;
-
-    // Stop the currently playing sound if it exists
-    if (currentSound) {
-      await currentSound.stopAsync();
-      await currentSound.unloadAsync();
-      setCurrentSound(null); // Reset currentSound to null
-    }
-
-    const words = inputtedText.trim().split(/\s+/);
-
-    // Array of sound files
-    const soundFiles = [
-        require('@/assets/audio/honk-0.mp3'),
-        require('@/assets/audio/honk-1.mp3'),
-        require('@/assets/audio/honk-2.mp3'),
-        require('@/assets/audio/honk-3.mp3'),
-        require('@/assets/audio/honk-4.mp3'),
-        require('@/assets/audio/honk-5.mp3'),
-    ];
-
-    // Simple hash function to generate a seed from the word
-    const hash = (word: string) => {
-        let hashValue = 0;
-        for (let i = 0; i < word.length; i++) {
-            hashValue += word.charCodeAt(i);
-        }
-        return hashValue;
-    };
-
-    // Play the sound for each word
-    for (const word of words) {
-      const randomIndex = hash(word) % soundFiles.length;
-      const soundFile = soundFiles[randomIndex];
-
-      // Load and play the audio
-      const { sound } = await Audio.Sound.createAsync(soundFile);
-      setCurrentSound(sound); // Set the current sound
-
-      let gooseVoiceModifier = 0;
-      switch (gooseName) {
-        case 'Fred':
-          gooseVoiceModifier = 0;
-          break;
-        case 'Steve':
-          gooseVoiceModifier = -0.15;
-          break;
-        case 'Dave':
-          gooseVoiceModifier = 0.15;
-          break;
-        default:
-          gooseVoiceModifier = 0;
-          break;
-      }
-      const playbackRate = 1.0 + gooseVoiceModifier;
-      await sound.setRateAsync(playbackRate, true);
-
-      // Play the sound
-      await sound.playAsync();
-
-      // Wait for sound to finish playing
-      await new Promise<void>((resolve) => {
-        let timer: NodeJS.Timeout;
-
-        sound.setOnPlaybackStatusUpdate((status) => {
-          if (status.isLoaded && !status.isPlaying && status.didJustFinish) {
-            clearTimeout(timer); // Clear the timer if sound finishes
-            resolve(); // Resolve the promise when the sound finishes playing
-          }
-        });
-
-        // Set a timer to resolve after 250 ms
-        timer = setTimeout(() => {
-          resolve(); // Resolve the promise after 400 ms
-        }, 300 / playbackRate);
-      });
-
-      // Optionally unload the sound after playing
-      await sound.unloadAsync();
-      setCurrentSound(null);
-    }
-  };
+  
 
   function translateText() {
     const textArray = inputText.trim().split(/\s+/);
@@ -138,17 +54,7 @@ export default function Index() {
       
       <View style={styles.textInputContainer}>
         <Text style={[styles.translationText]}>{translationText}</Text>
-        <Button 
-          onClickHandler={playAudio} 
-          icon={<FontAwesome name="bullhorn" size={24} color="#25292e" />}
-          style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10,
-            borderWidth: 2,
-            borderRadius: 10,
-          }} 
-        /> 
+        <AudioPlayerButton inputtedText={inputtedText} gooseName={gooseName}/>
       </View>   
       <View style={styles.footerContainer}>
         <Button 

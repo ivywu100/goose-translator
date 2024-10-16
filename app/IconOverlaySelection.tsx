@@ -58,7 +58,7 @@ export default function IconOverlaySelection({
   }
 
   const { width } = Dimensions.get('window');
-  const isMobile = width < 630;
+  const isMobile = width < 660;
 
   const styles = StyleSheet.create({
     overlay: {
@@ -72,7 +72,7 @@ export default function IconOverlaySelection({
       borderColor: "orange",
     },
     gooseName: {
-      fontSize: 20, // Increased font size
+      fontSize: 36, // Increased font size
       fontWeight: 'bold', // Bold text
       textAlign: 'center', // Centered text
       marginTop: 10, // Space above the text

@@ -4,7 +4,7 @@
     "slug": "goose-translator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/gooseIcon.jpg",
+    "icon": "./assets/images/gooseIconSmall.jpg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {

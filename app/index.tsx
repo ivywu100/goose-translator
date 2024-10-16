@@ -18,6 +18,116 @@ export default function Index() {
   const [gooseName, setGooseName] = useState<string>('Fred');
   const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/goose-1.jpg'));
   
+  function convertWordToHonk(word: string): string {
+    if (word.length === 0) return '';
+
+    function isPunctuation(char: string) {
+      return /[.,\/#!$%\^&\*;:{}=\-_`~()'"]/.test(char);
+    }
+
+    function wordLenMinusPunctuation(word: string) {
+      let wordLen = 0;
+      for (const char of word) {
+        if (!isPunctuation(char)) {
+          wordLen++;
+        }
+      }
+      return wordLen;
+    }
+
+    let result = '';
+
+    if (wordLenMinusPunctuation(word) === 0) return word;
+
+    let modifiedWord = word;
+
+    if (wordLenMinusPunctuation(word) === 1) {
+      let stringBuilder1 = '';
+      for (const char of modifiedWord) {
+        if (!isPunctuation(char)) {
+          stringBuilder1 = stringBuilder1 + ((char == char.toLowerCase()) ? 'honk' : 'HONK');
+        } else {
+          stringBuilder1 = stringBuilder1 + char;
+        }
+      }
+      modifiedWord = stringBuilder1;
+    }
+
+    else if (wordLenMinusPunctuation(word) === 2) {
+      let charsFound = 0;
+      let stringBuilder2 = '';
+      for (const char of modifiedWord) {
+        if (!isPunctuation(char)) {
+          if (charsFound === 0) {
+            stringBuilder2 = stringBuilder2 + ((char == char.toLowerCase()) ? 'ho' : 'HO');
+            charsFound++;
+          } else {
+            stringBuilder2 = stringBuilder2 + ((char == char.toLowerCase()) ? 'nk' : 'NK');
+            charsFound++;
+          }
+        } else {
+          stringBuilder2 = stringBuilder2 + char;
+        }
+      }
+      modifiedWord = stringBuilder2;
+    }
+
+    else if (wordLenMinusPunctuation(word) === 3) {
+      let charsFound = 0;
+      let stringBuilder3 = '';
+      for (const char of modifiedWord) {
+        if (!isPunctuation(char)) {
+          if (charsFound === 0) {
+            stringBuilder3 = stringBuilder3 + ((char == char.toLowerCase()) ? 'h' : 'H');
+            charsFound++;
+          } else if (charsFound === 1) {
+            stringBuilder3 = stringBuilder3 + ((char == char.toLowerCase()) ? 'o' : 'O');
+            charsFound++;
+          } else if (charsFound === 2) {
+            stringBuilder3 = stringBuilder3 + ((char == char.toLowerCase()) ? 'nk' : 'NK');
+            charsFound++;
+          }
+        } else {
+          stringBuilder3 = stringBuilder3 + char;
+        }
+      }
+      modifiedWord = stringBuilder3;
+    }
+
+    let hSet = false;
+    for (const char of modifiedWord) {
+      if (isPunctuation(char)) {
+        result = result + char;
+      } else {
+        if (!hSet) {
+          result = result + ((char == char.toLowerCase()) ? 'h' : 'H');
+          hSet = true;
+        } else {
+          result = result + ((char == char.toLowerCase()) ? 'o' : 'O');
+        }
+      }
+    }
+
+    let kSet = false;
+    let nSet = false;
+    for (let i = 0; i < result.length; i++) {
+      const indexToCheck = result.length - 1 - i;
+      const toCheck = result.charAt(indexToCheck);
+      if (!isPunctuation(toCheck)) {
+        if (!kSet) {
+          result = result.slice(0, indexToCheck) + ((toCheck == toCheck.toLowerCase()) ? 'k' : 'K') + result.slice(indexToCheck+1);
+          kSet = true;
+        } else if (!nSet) {
+          result = result.slice(0, indexToCheck) + ((toCheck == toCheck.toLowerCase()) ? 'n' : 'N') + result.slice(indexToCheck+1);
+          nSet = true;
+        } else {
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
 
   function translateText() {
     const textArray = inputText.trim().split(/\s+/);
@@ -27,9 +137,7 @@ export default function Index() {
       return;
     }
     const honkArray = textArray.map((elem, index) => {
-      if (elem.length === 0) return "";
-      if (elem.length <= 4) return (elem.charAt(0) == elem.charAt(0).toLowerCase() ? "h" : "H") + "onk";
-      return (elem.charAt(0) == elem.charAt(0).toLowerCase() ? "h" : "H") + "o".repeat(Math.floor((elem.length - 2)/3) * 2) + "o".repeat((elem.length - 2) % 3) + "n".repeat(Math.floor((elem.length - 2)/3)) + "k";
+      return convertWordToHonk(elem);  
     })
     setTranslationText(honkArray.join(" "));
     setInputtedText(inputText);
@@ -82,6 +190,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    fontSize: 28,
   },
   container: {
     flex: 1,
@@ -90,7 +199,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   gooseName: {
-    fontSize: 20, // Increased font size
+    fontSize: 36, // Increased font size
     fontWeight: 'bold', // Bold text
     textAlign: 'center', // Centered text
     marginTop: 10, // Space above the text
@@ -119,6 +228,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#ffffff",
     borderRadius: 20,
+    fontSize: 28,
   },
    image: {
     width: 320,

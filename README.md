@@ -10,6 +10,8 @@ Privacy policy can be found [here](privacy-policy.md).
 
 Image credits can be found [here](image-credits.md).
 
+Audio credits can be found [here](sound-credits.md).
+
 
 ## Run locally
 

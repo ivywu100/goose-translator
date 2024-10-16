@@ -19,7 +19,7 @@ export default function About() {
 					<Text style={styles.paragraph}>Enter some text to produce a *definitely completely accurate* translation in goose language. Features different honk pitches and duration depending on the input text. </Text>
 					<Text style={styles.paragraph}>For entertainment purposes only, attempt communication with real-life geese at your own risk.</Text>
 					<Text style={styles.paragraph}>
-						Source code, privacy policy, and image credits can be found at{' '}
+						Source code, privacy policy, and asset credits can be found at{' '}
 						<Text 
 							style={{ color: 'blue', textDecorationLine: 'underline' }} 
 							onPress={() => Linking.openURL('https://github.com/lo-maxwell/goose-translator')}

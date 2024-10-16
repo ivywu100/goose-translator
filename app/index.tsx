@@ -1,9 +1,10 @@
 import { View, StyleSheet, TextInput, Text, Dimensions, Platform, ImageSourcePropType } from 'react-native';
 import Button from '@/components/Button';
-import IconButton from '@/components/IconButton';
 import React, { useEffect, useState } from 'react';
 import { Audio } from 'expo-av';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import IconButton from './IconButton';
+import About from './About';
 
 
 const { height } = Dimensions.get('window');
@@ -15,7 +16,7 @@ export default function Index() {
   const [translationText, setTranslationText] = useState('Translation');
   const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
   const [gooseName, setGooseName] = useState<string>('Fred');
-  const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/background-image.jpg'));
+  const [imgSource, setImgSource] = useState<ImageSourcePropType>(require('@/assets/images/gooseSelectionImages/goose-1.jpg'));
 
   // Load the audio file
   async function playAudio() {
@@ -119,7 +120,9 @@ export default function Index() {
   }
 
   return (
+    <>
     <View style={styles.container}>
+    <About/>
       <View style={styles.imageContainer}>
         <IconButton imgSource={imgSource} setImgSource={setImgSource} setGooseName={setGooseName}/>
         <Text style={styles.gooseName}>{gooseName}</Text>
@@ -154,13 +157,16 @@ export default function Index() {
           style={{
             paddingVertical: 25,
             paddingHorizontal: 50,
-            backgroundColor: "#ffffff",
-            borderWidth: 1,
+            backgroundColor: "orange",
           }} 
-          labelStyle={{ fontSize: 18 }}
+          labelStyle={{ 
+            fontSize: 18,
+            fontWeight: 'bold',
+          }}
         />
       </View>
     </View>
+    </>
   );
 }
 
@@ -173,7 +179,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#aaaaaa',
+    backgroundColor: '#AEC6CF',
     alignItems: 'center',
     paddingTop: 40,
   },

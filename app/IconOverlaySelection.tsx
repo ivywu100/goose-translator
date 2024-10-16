@@ -1,8 +1,8 @@
 import { StyleSheet, View, Pressable, ImageSourcePropType, Dimensions, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Image } from "expo-image";
-import Button from './Button';
-import { Overlay } from './Overlay';
+import { Overlay } from '@/components/Overlay';
+import Button from '@/components/Button';
 
 export default function IconOverlaySelection({
   isVisible,
@@ -22,9 +22,9 @@ export default function IconOverlaySelection({
   const [images, setImages] = useState<ImageSourcePropType[]>([]);
 
   useEffect(() => {
-    const gooseChoice = require('@/assets/images/gooseSelectionImages/background-image.jpg');
-    const gooseChoice1 = require('@/assets/images/gooseSelectionImages/placeholder-1.jpg');
-    const gooseChoice2 = require('@/assets/images/gooseSelectionImages/placeholder-2.jpg');
+    const gooseChoice = require('@/assets/images/gooseSelectionImages/goose-1.jpg');
+    const gooseChoice1 = require('@/assets/images/gooseSelectionImages/goose-2.jpg');
+    const gooseChoice2 = require('@/assets/images/gooseSelectionImages/goose-3.jpg');
   
     setImages([gooseChoice, gooseChoice1, gooseChoice2]);
   }, [])  
@@ -67,9 +67,9 @@ export default function IconOverlaySelection({
       width: 300,
       height: 300,
       borderRadius: 150,
-      borderWidth: 3,
+      borderWidth: 6,
       overflow: "hidden",
-      borderColor: "red",
+      borderColor: "orange",
     },
     gooseName: {
       fontSize: 20, // Increased font size
@@ -84,6 +84,7 @@ export default function IconOverlaySelection({
       borderWidth: 3,
       overflow: "hidden",
       marginHorizontal: isMobile ? 5 : 10,
+      borderColor: "#0096FF",
     },
     imageSelectionContainer: {
       flexDirection: 'row',

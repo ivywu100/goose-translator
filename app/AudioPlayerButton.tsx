@@ -47,7 +47,7 @@ export default function AudioPlayerButton ({inputtedText, gooseName}: {inputtedT
     const hash = (word: string) => {
         let hashValue = 0;
         for (let i = 0; i < word.length; i++) {
-            hashValue += word.charCodeAt(i);
+            hashValue += word.charCodeAt(i) * i;
         }
         return hashValue;
     };

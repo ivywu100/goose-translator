@@ -172,6 +172,8 @@ export default function Index() {
             paddingVertical: 25,
             paddingHorizontal: 50,
             backgroundColor: "orange",
+            maxHeight: '100%', // Limit the height to the parent's height
+            height: 'auto', // Allow the height to adjust based on content
           }} 
           labelStyle={{ 
             fontSize: 18,

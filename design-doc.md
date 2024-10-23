@@ -38,23 +38,21 @@ Android app that "translates" text into a series of audio honks. Features differ
 
 ## Roadmap ##
 
-  * Create main page
+  * Create main page -- Finished
     * Placeholder goose icon/mascot
     * Input text box
     * Translate button
     * Translation display area
-  * Create goose mascot
-    * Multiple mascots ? or just small/medium/large size, color changes
+  * Create goose mascot -- Finished
+    * Multiple mascots
     * Add goose mascot to files and display on main page
-  * Create goose honk audio
-    * Initially, just a few different honks
-      * On translation, play a random honk audio for each word/clump of letters
-    * Prefer: split honk into 3 pieces
-      * honk start (played once)
-      * honk middle (played on repeat for unknown duration)
-      * honk end (played once)
-      * On translation, play a random honk start, play honk middle on repeat, play honk end
-  * Create goose honk text translation
-    * Initially, display honks corresponding to text length
-    * Consider changing to match the audio (?)
-    
+  * Create goose honk audio -- Finished
+    * Play a random honk audio for each word/clump of letters
+  * Create goose honk text translation -- Finished
+    * Display honks depending on text length and punctuation
+  * Create App Icon and Play Store Assets -- Finished
+  * Publish to Play Store -- Currently in review process
+  * Future updates
+    * Replace goose images with custom art
+    * Get better audio clips
+    * Allow sharing of translations/sound clips

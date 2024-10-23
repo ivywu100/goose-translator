@@ -56,45 +56,23 @@ export default function AudioPlayerButton ({inputtedText, gooseName}: {inputtedT
     for (const word of words) {
       let soundFile;
 
-	  const randomIndex = hash(word) % soundFiles.length;
-	//   console.log(randomIndex);
-	  soundFile = soundFiles[randomIndex];
-	  let isLongHonk = false;
+      const randomIndex = hash(word + gooseName) % soundFiles.length;
+      soundFile = soundFiles[randomIndex];
+      let isLongHonk = false;
       if (word.length >= 6) {
         const longHonkIndex = hash(word) % 10;
         if (longHonkIndex > 10 - word.length) {
-          const randomIndex = hash(word) % longSoundFiles.length;
+          const randomIndex = hash(word + gooseName) % longSoundFiles.length;
           soundFile = longSoundFiles[randomIndex];
-		  isLongHonk = true;
-        } else {
-          const randomIndex = hash(word) % soundFiles.length;
-          soundFile = soundFiles[randomIndex];
+		    isLongHonk = true;
         }
-      } else {
-        const randomIndex = hash(word) % soundFiles.length;
-        soundFile = soundFiles[randomIndex];
       }
 
       // Load and play the audio
       const { sound } = await Audio.Sound.createAsync(soundFile);
       setCurrentSound(sound); // Set the current sound
 
-      let gooseVoiceModifier = 0;
-      switch (gooseName) {
-        case 'Fred':
-          gooseVoiceModifier = 0;
-          break;
-        case 'Steve':
-          gooseVoiceModifier = -0.15;
-          break;
-        case 'Dave':
-          gooseVoiceModifier = 0.15;
-          break;
-        default:
-          gooseVoiceModifier = 0;
-          break;
-      }
-      const playbackRate = 1.0 + gooseVoiceModifier;
+      const playbackRate = 1.0;
       await sound.setRateAsync(playbackRate, true);
 
       // Play the sound
@@ -105,16 +83,30 @@ export default function AudioPlayerButton ({inputtedText, gooseName}: {inputtedT
         let timer: NodeJS.Timeout;
 
         sound.setOnPlaybackStatusUpdate((status) => {
-          if (status.isLoaded && !status.isPlaying && status.didJustFinish) {
+          if (status.isLoaded && status.didJustFinish) {
             clearTimeout(timer); // Clear the timer if sound finishes
             resolve(); // Resolve the promise when the sound finishes playing
           }
         });
 
-        // Set a timer to resolve after 250 ms
-        timer = setTimeout(() => {
-          resolve(); // Resolve the promise after 400 ms
-        }, isLongHonk ? (800 / playbackRate) : (400 / playbackRate));
+        // // Set a timer to resolve after 250 ms
+        // timer = setTimeout(() => {
+        //   resolve(); // Resolve the promise after 400 ms
+        // }, isLongHonk ? (800) : (400));
+
+        // Get the duration of the sound
+        sound.getStatusAsync().then((status) => {
+          if (status.isLoaded) {
+            const soundDuration = status.durationMillis; // Sound duration in milliseconds
+
+            // Set a timer to resolve after the actual sound duration
+            if (!timer) {
+              timer = setTimeout(() => {
+                resolve(); // Resolve the promise after the sound duration
+              }, soundDuration);
+            }
+          }
+        });
       });
 
       // Optionally unload the sound after playing

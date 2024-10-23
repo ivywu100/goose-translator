@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "goose-translator",
+    "name": "Goose Translator",
     "slug": "goose-translator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/gooseIconEdited.png",
+    "icon": "./assets/images/icons/gooseIconMedSmall.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/gooseIcon.jpg",
+      "image": "./assets/images/icons/gooseIcon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,15 +17,27 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/gooseIcon.jpg",
+        "foregroundImage": "./assets/images/icons/gooseIconMedSmall.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions":[
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.INTERNET",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE"
+      ],
       "package": "com.lungfishstudio.goosetranslator"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/gooseIcon.jpg"
+      "favicon": "./assets/images/icons/gooseIconMedium.png"
     },
     "plugins": [
       "expo-router"

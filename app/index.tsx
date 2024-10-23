@@ -1,8 +1,6 @@
-import { View, StyleSheet, TextInput, Text, Dimensions, Platform, ImageSourcePropType } from 'react-native';
+import { View, StyleSheet, TextInput, Text, Dimensions, ImageSourcePropType } from 'react-native';
 import Button from '@/components/Button';
-import React, { useEffect, useState } from 'react';
-import { Audio } from 'expo-av';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React, { useState } from 'react';
 import IconButton from './IconButton';
 import About from './About';
 import AudioPlayerButton from './AudioPlayerButton';
@@ -172,8 +170,10 @@ export default function Index() {
             paddingVertical: 25,
             paddingHorizontal: 50,
             backgroundColor: "orange",
+            minHeight: 75,
             maxHeight: '100%', // Limit the height to the parent's height
             height: 'auto', // Allow the height to adjust based on content
+            alignSelf: 'center', // Center the button horizontally
           }} 
           labelStyle={{ 
             fontSize: 18,
@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    marginTop: 30,
     marginBottom: 30,
     alignItems: 'center',
   },

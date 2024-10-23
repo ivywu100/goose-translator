@@ -12,6 +12,8 @@ Image credits can be found [here](image-credits.md).
 
 Audio credits can be found [here](sound-credits.md).
 
+Special thanks to [Ivy Wu](https://github.com/ivywu100) for drawing the icon and splash screen, as well as extensive testing of the app.
+
 
 ## Run locally
 

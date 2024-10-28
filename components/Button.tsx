@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, Text, ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, View, Pressable, Text, ViewStyle, TextStyle, TouchableOpacity } from 'react-native';
 
 export default function Button({
   label,
@@ -23,14 +23,14 @@ export default function Button({
   const buttonStyle = StyleSheet.flatten([styles.button, style]);
 
   return (
-      <Pressable
+      <TouchableOpacity
         style={[
           buttonStyle,
         ]}
         onPress={onClickHandler}
       >
         {buttonContent}
-      </Pressable>
+      </TouchableOpacity>
   );
 }
 

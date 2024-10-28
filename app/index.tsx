@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import IconButton from './IconButton';
 import About from './About';
 import AudioPlayerButton from './AudioPlayerButton';
+import SpeechToHonkButton from './SpeechToHonkButton';
 
 
 const { height } = Dimensions.get('window');
@@ -163,23 +164,22 @@ export default function Index() {
         <AudioPlayerButton inputtedText={inputtedText} gooseName={gooseName}/>
       </View>   
       <View style={styles.footerContainer}>
-        <Button 
-          label="Translate" 
-          onClickHandler={translateText} 
-          style={{
-            paddingVertical: 25,
-            paddingHorizontal: 50,
-            backgroundColor: "orange",
-            minHeight: 75,
-            maxHeight: '100%', // Limit the height to the parent's height
-            height: 'auto', // Allow the height to adjust based on content
-            alignSelf: 'center', // Center the button horizontally
-          }} 
-          labelStyle={{ 
-            fontSize: 18,
-            fontWeight: 'bold',
-          }}
-        />
+        <View>
+          <Button 
+            label="Translate" 
+            onClickHandler={translateText} 
+            style={styles.translateButtonContainer} 
+            labelStyle={{ 
+              fontSize: 18,
+              fontWeight: 'bold',
+            }}
+          />
+        </View>
+        <View>
+          <SpeechToHonkButton>
+
+          </SpeechToHonkButton>
+        </View>
       </View>
     </View>
     </>
@@ -237,10 +237,21 @@ const styles = StyleSheet.create({
     height: 440,
     borderRadius: 18,
   },
+  translateButtonContainer:{
+    paddingVertical: 25,
+    paddingHorizontal: 50,
+    backgroundColor: "orange",
+    minHeight: 75,
+    maxHeight: '100%', // Limit the height to the parent's height
+    height: 'auto', // Allow the height to adjust based on content
+    alignSelf: 'center', // Center the button horizontally
+    marginHorizontal:20
+  },
   footerContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between', // Space them out evenly
     marginBottom: 30,
     alignItems: 'center',
+    flexDirection: 'row'
   },
 });
